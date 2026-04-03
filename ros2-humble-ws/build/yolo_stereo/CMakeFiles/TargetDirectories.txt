@@ -1,0 +1,10 @@
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/uninstall.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/yolo_stereo_uninstall.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/YoloDepthFuser.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/test.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/edit_cache.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/rebuild_cache.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/list_install_components.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/install.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/install/local.dir
+/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/CMakeFiles/install/strip.dir

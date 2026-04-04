@@ -1,7 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

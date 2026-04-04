@@ -1,18 +1,22 @@
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 #include <iostream>
 #include <cmath>
 #include <algorithm>
 #include <optional>
 
-#include <opencv2/opencv.hpp>
+
+#include <image_transport/image_transport.hpp> // Using image_transport allows us to publish and subscribe to compressed image streams in ROS2
+#include <opencv2/opencv.hpp> // We include everything about OpenCV as we don't care much about compilation time at the moment.
+// #include <opencv2/core.hpp>
+// #include <opencv2/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include "rclcpp/rclcpp.hpp"
-#include "vision_msgs/msg/detection3d_array.hpp"
-#include "vision_msgs/msg/detection2d_array.hpp"
-#include "sensor_msgs/msg/point_cloud2.hpp"
+#include "vision_msgs/msg/detection3_d_array.hpp"
+#include "vision_msgs/msg/detection2_d_array.hpp"
 #include "stereo_msgs/msg/disparity_image.hpp"
 
 #define BUFFER_LEN 5 // the actual buffer is BUFFER_LEN-1 because of how the buffer works lol
@@ -62,13 +66,13 @@ class YoloDepthFuser : public rclcpp::Node
     class Detections_Set {
       public:
         std::vector<Detection> detections;
-        rclcpp::Time timestamp; // fix: was rclpp::Time
+        rclcpp::Time timestamp; 
     };
 
     std::array<std::optional<Detections_Set>, BUFFER_LEN> detections_buffer;
     
   private:
-    template <typename T, std::size_t N> void add_to_buf(std::array<T, N>& a, T n)
+    template <typename T, std::size_t N> void add_to_buf(std::array<std::optional<T>, N>& a, T n)
     {
       a[N-1] = n;
       std::rotate(a.begin(), a.begin() + 1, a.end());
@@ -84,10 +88,10 @@ class YoloDepthFuser : public rclcpp::Node
         if (!det_set.has_value()) {continue;}
         for (const auto& dis : disparities_buffer) { 
           if (!dis.has_value()) {continue;}
-          if (min_timediff > abs((det_set.timestamp - dis.timestamp).seconds())) {
-            min_timediff = abs((det_set.timestamp - dis.timestamp).seconds());
-            target_det_set = det_set;
-            target_dis = dis;
+          if (min_timediff > abs((det_set->timestamp - dis->timestamp).seconds())) {
+            min_timediff = abs((det_set->timestamp - dis->timestamp).seconds());
+            target_det_set = *det_set;
+            target_dis = *dis;
           }
         }
       }
@@ -148,12 +152,12 @@ class YoloDepthFuser : public rclcpp::Node
       Detections_Set new_det_set;
       for (int i = 0; i < (int)msg->detections.size(); i ++) {
         Detection det;
-        det.bbox_centerx = msg->detections[i].bbox.center.x;
-        det.bbox_centery = msg->detections[i].bbox.center.y;
+        det.bbox_centerx = msg->detections[i].bbox.center.position.x;
+        det.bbox_centery = msg->detections[i].bbox.center.position.y;
         det.bbox_sizex = msg->detections[i].bbox.size_x;
         det.bbox_sizey = msg->detections[i].bbox.size_y;
         det.confidence = msg->detections[i].results[0].hypothesis.score;
-        det.color = msg->detections[i].results[0].hypothesis.class_id;
+        det.color = std::stoi(msg->detections[i].results[0].hypothesis.class_id);
         new_det_set.detections.push_back(det);
         // you might notice that we ignore orientation. this is because we use yolov8 and it doesn't give it; we dont car
       }
@@ -169,7 +173,7 @@ class YoloDepthFuser : public rclcpp::Node
       Disparity disp;
       disp.disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disparity->image))->image;
       disp.f = disparity->f;
-      disp.T = disparity->T;
+      disp.T = disparity->t;
       disp.timestamp = disparity->header.stamp;
       
       add_to_buf(disparities_buffer, disp);

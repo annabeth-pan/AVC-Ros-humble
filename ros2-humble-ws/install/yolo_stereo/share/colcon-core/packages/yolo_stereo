@@ -1,1 +1,1 @@
-OpencCV:cv_bridge:geometry_msgs:rclcpp:vision_msgs
+OpencCV:cv_bridge:geometry_msgs:rclcpp:stereo_msgs:vision_msgs

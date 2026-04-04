@@ -1,0 +1,2 @@
+Invoking command in '/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo': CMAKE_PREFIX_PATH=/opt/ros/humble /bin/cmake --build /Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo -- -j4 -l4
+Invoked command in '/Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo' returned '2': CMAKE_PREFIX_PATH=/opt/ros/humble /bin/cmake --build /Users/annabethpan/Documents/GitHub/AVC-Ros-humble/ros2-humble-ws/build/yolo_stereo -- -j4 -l4

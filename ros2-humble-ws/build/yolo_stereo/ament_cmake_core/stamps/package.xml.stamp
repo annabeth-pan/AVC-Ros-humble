@@ -14,6 +14,7 @@
   <depend>OpencCV</depend>
   <depend>rclcpp</depend>
   <depend>geometry_msgs</depend>
+  <depend>stereo_msgs</depend>
   <depend>vision_msgs</depend>
   <depend>cv_bridge</depend>
 

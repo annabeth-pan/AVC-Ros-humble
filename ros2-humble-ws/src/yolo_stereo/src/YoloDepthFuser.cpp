@@ -25,8 +25,8 @@
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS .5 // in m
 #define BASE_LINK_OFFSET .114 // in m. distance from cameras to base link
-#define T .256 // distance between cameras in m
-#define f .0039 // focal length of cameras in m
+#define CAMERAS_DIST 0.256 // distance between cameras in m
+#define FOCAL_LEN 0.0039 // focal length of cameras in m
 
 using namespace std::chrono_literals;
 
@@ -124,7 +124,7 @@ class YoloDepthFuser : public rclcpp::Node
                                cv::Range(det.bbox_centery - det.bbox_sizey*CROP_RATIO, det.bbox_centery + det.bbox_sizey*CROP_RATIO),
                                cv::Range(det.bbox_centerx - det.bbox_sizex*CROP_RATIO, det.bbox_centerx + det.bbox_sizex*CROP_RATIO));
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = f*T/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET; // called relx for consistency with buckalization
+        float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET; // called relx for consistency with buckalization
         
         // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html

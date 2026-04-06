@@ -613,8 +613,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
   /opt/ros/humble/include/image_transport/image_transport/loader_fwds.hpp \
   /opt/ros/humble/include/image_transport/image_transport/subscriber.hpp \
   /opt/ros/humble/include/image_transport/image_transport/transport_hints.hpp \
-  /usr/include/opencv4/opencv2/opencv.hpp \
-  /usr/include/opencv4/opencv2/opencv_modules.hpp \
   /usr/include/opencv4/opencv2/core.hpp \
   /usr/include/opencv4/opencv2/core/cvdef.h \
   /usr/include/opencv4/opencv2/core/version.hpp \
@@ -625,6 +623,7 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
   /usr/lib/gcc/aarch64-linux-gnu/11/include/arm_fp16.h \
   /usr/lib/gcc/aarch64-linux-gnu/11/include/arm_bf16.h \
   /usr/include/opencv4/opencv2/core/base.hpp \
+  /usr/include/opencv4/opencv2/opencv_modules.hpp \
   /usr/include/c++/11/climits \
   /usr/lib/gcc/aarch64-linux-gnu/11/include/limits.h \
   /usr/lib/gcc/aarch64-linux-gnu/11/include/syslimits.h \
@@ -658,92 +657,8 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
   /usr/include/opencv4/opencv2/core/optim.hpp \
   /usr/include/opencv4/opencv2/core/ovx.hpp \
   /usr/include/opencv4/opencv2/core/cvdef.h \
-  /usr/include/opencv4/opencv2/calib3d.hpp \
-  /usr/include/opencv4/opencv2/features2d.hpp \
-  /usr/include/opencv4/opencv2/flann/miniflann.hpp \
-  /usr/include/opencv4/opencv2/flann/defines.h \
-  /usr/include/opencv4/opencv2/flann/config.h \
-  /usr/include/opencv4/opencv2/core/affine.hpp \
-  /usr/include/opencv4/opencv2/dnn.hpp \
-  /usr/include/opencv4/opencv2/dnn/dnn.hpp \
-  /usr/include/opencv4/opencv2/core/async.hpp \
-  /usr/include/opencv4/opencv2/dnn/version.hpp \
-  /usr/include/opencv4/opencv2/dnn/dict.hpp \
-  /usr/include/opencv4/opencv2/dnn/layer.hpp \
-  /usr/include/opencv4/opencv2/dnn/dnn.inl.hpp \
-  /usr/include/opencv4/opencv2/dnn/utils/inference_engine.hpp \
-  /usr/include/opencv4/opencv2/dnn/dnn.hpp \
-  /usr/include/opencv4/opencv2/flann.hpp \
-  /usr/include/opencv4/opencv2/flann/flann_base.hpp \
-  /usr/include/opencv4/opencv2/flann/general.h \
-  /usr/include/opencv4/opencv2/flann/matrix.h \
-  /usr/include/opencv4/opencv2/flann/params.h \
-  /usr/include/opencv4/opencv2/flann/any.h \
-  /usr/include/opencv4/opencv2/flann/defines.h \
-  /usr/include/opencv4/opencv2/flann/saving.h \
-  /usr/include/opencv4/opencv2/flann/nn_index.h \
-  /usr/include/opencv4/opencv2/flann/result_set.h \
-  /usr/include/c++/11/set \
-  /usr/include/c++/11/bits/stl_set.h \
-  /usr/include/c++/11/bits/stl_multiset.h \
-  /usr/include/opencv4/opencv2/flann/all_indices.h \
-  /usr/include/opencv4/opencv2/flann/kdtree_index.h \
-  /usr/include/opencv4/opencv2/flann/dynamic_bitset.h \
-  /usr/include/opencv4/opencv2/flann/dist.h \
-  /usr/include/opencv4/opencv2/flann/heap.h \
-  /usr/include/opencv4/opencv2/flann/allocator.h \
-  /usr/include/opencv4/opencv2/flann/random.h \
-  /usr/include/opencv4/opencv2/flann/kdtree_single_index.h \
-  /usr/include/opencv4/opencv2/flann/kmeans_index.h \
-  /usr/include/opencv4/opencv2/flann/logger.h \
-  /usr/include/opencv4/opencv2/flann/composite_index.h \
-  /usr/include/opencv4/opencv2/flann/linear_index.h \
-  /usr/include/opencv4/opencv2/flann/hierarchical_clustering_index.h \
-  /usr/include/opencv4/opencv2/flann/lsh_index.h \
-  /usr/include/opencv4/opencv2/flann/lsh_table.h \
-  /usr/include/c++/11/math.h \
-  /usr/include/opencv4/opencv2/flann/autotuned_index.h \
-  /usr/include/opencv4/opencv2/flann/ground_truth.h \
-  /usr/include/opencv4/opencv2/flann/index_testing.h \
-  /usr/include/opencv4/opencv2/flann/timer.h \
-  /usr/include/opencv4/opencv2/flann/sampling.h \
-  /usr/include/opencv4/opencv2/highgui.hpp \
-  /usr/include/opencv4/opencv2/imgcodecs.hpp \
-  /usr/include/opencv4/opencv2/videoio.hpp \
   /usr/include/opencv4/opencv2/imgproc.hpp \
   /usr/include/opencv4/opencv2/imgproc/segmentation.hpp \
-  /usr/include/opencv4/opencv2/ml.hpp \
-  /usr/include/opencv4/opencv2/ml/ml.inl.hpp \
-  /usr/include/opencv4/opencv2/objdetect.hpp \
-  /usr/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp \
-  /usr/include/opencv4/opencv2/objdetect/face.hpp \
-  /usr/include/opencv4/opencv2/photo.hpp \
-  /usr/include/opencv4/opencv2/stitching.hpp \
-  /usr/include/opencv4/opencv2/stitching/warpers.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/warpers.hpp \
-  /usr/include/opencv4/opencv2/core/cuda.hpp \
-  /usr/include/opencv4/opencv2/core/cuda_types.hpp \
-  /usr/include/opencv4/opencv2/core/cuda.inl.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/warpers.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/matchers.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/matchers.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/util.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/util_inl.hpp \
-  /usr/include/c++/11/queue \
-  /usr/include/c++/11/deque \
-  /usr/include/c++/11/bits/stl_deque.h \
-  /usr/include/c++/11/bits/deque.tcc \
-  /usr/include/c++/11/bits/stl_queue.h \
-  /usr/include/opencv4/opencv2/stitching/detail/camera.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/exposure_compensate.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/blenders.hpp \
-  /usr/include/opencv4/opencv2/stitching/detail/camera.hpp \
-  /usr/include/opencv4/opencv2/video.hpp \
-  /usr/include/opencv4/opencv2/video/tracking.hpp \
-  /usr/include/opencv4/opencv2/video/background_segm.hpp \
   /opt/ros/humble/include/cv_bridge/cv_bridge/cv_bridge.h \
   /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/compressed_image.hpp \
   /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/compressed_image__struct.hpp \
@@ -810,6 +725,9 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
   /usr/include/aarch64-linux-gnu/bits/signal_ext.h \
   /opt/ros/humble/include/rclcpp/rclcpp/executors.hpp \
   /opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp \
+  /usr/include/c++/11/set \
+  /usr/include/c++/11/bits/stl_set.h \
+  /usr/include/c++/11/bits/stl_multiset.h \
   /opt/ros/humble/include/rclcpp/rclcpp/executor.hpp \
   /usr/include/c++/11/cassert \
   /opt/ros/humble/include/rcpputils/rcpputils/scope_exit.hpp \
@@ -915,6 +833,8 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
   /opt/ros/humble/include/stereo_msgs/stereo_msgs/msg/rosidl_generator_cpp__visibility_control.hpp
 
 
+/opt/ros/humble/include/stereo_msgs/stereo_msgs/msg/rosidl_generator_cpp__visibility_control.hpp:
+
 /opt/ros/humble/include/stereo_msgs/stereo_msgs/msg/detail/disparity_image__traits.hpp:
 
 /opt/ros/humble/include/stereo_msgs/stereo_msgs/msg/detail/disparity_image__builder.hpp:
@@ -926,6 +846,8 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/detection2_d_array__builder.hpp:
 
 /opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/pose2_d__struct.hpp:
+
+/opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/bounding_box2_d__struct.hpp:
 
 /opt/ros/humble/include/vision_msgs/vision_msgs/msg/detection2_d_array.hpp:
 
@@ -1021,6 +943,12 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/cassert:
 
+/usr/include/c++/11/bits/stl_multiset.h:
+
+/usr/include/c++/11/bits/stl_set.h:
+
+/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:
+
 /usr/include/aarch64-linux-gnu/bits/signal_ext.h:
 
 /usr/include/aarch64-linux-gnu/bits/sigthread.h:
@@ -1061,6 +989,8 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/asm-generic/types.h:
 
+/usr/include/aarch64-linux-gnu/asm/types.h:
+
 /usr/include/aarch64-linux-gnu/asm/sigcontext.h:
 
 /usr/include/aarch64-linux-gnu/bits/sigcontext.h:
@@ -1095,105 +1025,7 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/cv_bridge/cv_bridge/cv_bridge.h:
 
-/usr/include/opencv4/opencv2/video/background_segm.hpp:
-
-/opt/ros/humble/include/stereo_msgs/stereo_msgs/msg/rosidl_generator_cpp__visibility_control.hpp:
-
-/usr/include/opencv4/opencv2/stitching/detail/exposure_compensate.hpp:
-
-/usr/include/c++/11/bits/stl_queue.h:
-
-/usr/include/c++/11/bits/deque.tcc:
-
-/usr/include/c++/11/bits/stl_deque.h:
-
-/usr/include/c++/11/deque:
-
-/usr/include/c++/11/queue:
-
-/usr/include/opencv4/opencv2/stitching/detail/util.hpp:
-
-/usr/include/opencv4/opencv2/stitching/detail/motion_estimators.hpp:
-
-/usr/include/opencv4/opencv2/stitching/detail/matchers.hpp:
-
-/usr/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp:
-
-/usr/include/opencv4/opencv2/core/cuda.hpp:
-
-/usr/include/opencv4/opencv2/stitching/warpers.hpp:
-
-/usr/include/opencv4/opencv2/stitching.hpp:
-
-/opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/bounding_box2_d__struct.hpp:
-
-/usr/include/opencv4/opencv2/objdetect/detection_based_tracker.hpp:
-
 /usr/include/opencv4/opencv2/imgproc/segmentation.hpp:
-
-/usr/include/opencv4/opencv2/videoio.hpp:
-
-/usr/include/opencv4/opencv2/imgcodecs.hpp:
-
-/usr/include/opencv4/opencv2/highgui.hpp:
-
-/usr/include/opencv4/opencv2/flann/sampling.h:
-
-/usr/include/opencv4/opencv2/flann/index_testing.h:
-
-/usr/include/opencv4/opencv2/flann/lsh_table.h:
-
-/usr/include/aarch64-linux-gnu/asm/types.h:
-
-/usr/include/opencv4/opencv2/flann/lsh_index.h:
-
-/usr/include/opencv4/opencv2/flann/linear_index.h:
-
-/usr/include/opencv4/opencv2/flann/logger.h:
-
-/usr/include/opencv4/opencv2/flann/kdtree_single_index.h:
-
-/usr/include/opencv4/opencv2/flann/allocator.h:
-
-/usr/include/opencv4/opencv2/flann/heap.h:
-
-/usr/include/opencv4/opencv2/flann/all_indices.h:
-
-/usr/include/c++/11/bits/stl_multiset.h:
-
-/opt/ros/humble/include/rclcpp/rclcpp/executors/multi_threaded_executor.hpp:
-
-/usr/include/c++/11/bits/stl_set.h:
-
-/usr/include/opencv4/opencv2/flann/saving.h:
-
-/usr/include/opencv4/opencv2/flann/params.h:
-
-/usr/include/opencv4/opencv2/flann/matrix.h:
-
-/usr/include/opencv4/opencv2/flann.hpp:
-
-/usr/include/opencv4/opencv2/dnn/utils/inference_engine.hpp:
-
-/usr/include/opencv4/opencv2/dnn/dnn.inl.hpp:
-
-/usr/include/opencv4/opencv2/dnn/layer.hpp:
-
-/usr/include/opencv4/opencv2/dnn/dict.hpp:
-
-/usr/include/opencv4/opencv2/dnn/version.hpp:
-
-/usr/include/opencv4/opencv2/core/async.hpp:
-
-/usr/include/opencv4/opencv2/dnn/dnn.hpp:
-
-/usr/include/opencv4/opencv2/core/affine.hpp:
-
-/usr/include/opencv4/opencv2/flann/config.h:
-
-/usr/include/opencv4/opencv2/flann/defines.h:
-
-/usr/include/opencv4/opencv2/features2d.hpp:
 
 /usr/include/opencv4/opencv2/core/ovx.hpp:
 
@@ -1241,6 +1073,10 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/climits:
 
+/opt/ros/humble/include/rcl_interfaces/rcl_interfaces/srv/detail/get_parameter_types__builder.hpp:
+
+/usr/include/opencv4/opencv2/opencv_modules.hpp:
+
 /usr/include/opencv4/opencv2/core/base.hpp:
 
 /opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/detection2_d_array__type_support.hpp:
@@ -1251,19 +1087,11 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/cstddef:
 
-/usr/include/opencv4/opencv2/dnn.hpp:
-
 /usr/include/opencv4/opencv2/core/hal/interface.h:
 
 /usr/include/opencv4/opencv2/core/version.hpp:
 
 /usr/include/opencv4/opencv2/core.hpp:
-
-/opt/ros/humble/include/rcl_interfaces/rcl_interfaces/srv/detail/get_parameter_types__builder.hpp:
-
-/usr/include/opencv4/opencv2/opencv_modules.hpp:
-
-/usr/include/opencv4/opencv2/opencv.hpp:
 
 /opt/ros/humble/include/image_transport/image_transport/transport_hints.hpp:
 
@@ -1282,8 +1110,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/std_msgs/std_msgs/msg/detail/header__struct.hpp:
 
 /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/detail/image__struct.hpp:
-
-/usr/include/opencv4/opencv2/video/tracking.hpp:
 
 /opt/ros/humble/include/image_transport/image_transport/camera_publisher.hpp:
 
@@ -1319,8 +1145,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/msg/detail/parameter_value__type_support.hpp:
 
-/usr/include/opencv4/opencv2/ml.hpp:
-
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/msg/detail/parameter_value__builder.hpp:
 
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/msg/detail/parameter_type__type_support.hpp:
@@ -1348,8 +1172,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/rclcpp/rclcpp/generic_subscription.hpp:
 
 /opt/ros/humble/include/rclcpp/rclcpp/subscription_factory.hpp:
-
-/usr/include/opencv4/opencv2/flann/hierarchical_clustering_index.h:
 
 /opt/ros/humble/include/libstatistics_collector/libstatistics_collector/collector/metric_details_interface.hpp:
 
@@ -1413,8 +1235,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/statistics_msgs/statistics_msgs/msg/detail/statistic_data_point__struct.hpp:
 
-/usr/include/opencv4/opencv2/flann/composite_index.h:
-
 /usr/include/c++/11/bits/basic_ios.h:
 
 /usr/include/c++/11/bits/uniform_int_dist.h:
@@ -1429,8 +1249,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/aarch64-linux-gnu/sys/procfs.h:
 
-/usr/include/opencv4/opencv2/stitching/detail/camera.hpp:
-
 /usr/include/c++/11/bits/locale_classes.h:
 
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/srv/detail/set_parameters__builder.hpp:
@@ -1444,8 +1262,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /usr/include/c++/11/ios:
 
 /usr/include/c++/11/utility:
-
-/usr/include/opencv4/opencv2/flann/nn_index.h:
 
 /usr/include/c++/11/bits/basic_string.tcc:
 
@@ -1464,8 +1280,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /usr/include/linux/limits.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_FILE.h:
-
-/usr/include/opencv4/opencv2/objdetect/face.hpp:
 
 /usr/include/aarch64-linux-gnu/bits/types/__fpos64_t.h:
 
@@ -1515,15 +1329,11 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/bits/nested_exception.h:
 
-/usr/include/opencv4/opencv2/flann/dynamic_bitset.h:
-
 /opt/ros/humble/include/rmw/rmw/publisher_options.h:
 
 /opt/ros/humble/include/rclcpp/rclcpp/wait_set_policies/detail/storage_policy_common.hpp:
 
 /opt/ros/humble/include/rmw/rmw/topic_endpoint_info_array.h:
-
-/usr/include/opencv4/opencv2/flann/kdtree_index.h:
 
 /usr/include/c++/11/ext/string_conversions.h:
 
@@ -1577,8 +1387,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/bits/stl_pair.h:
 
-/usr/include/opencv4/opencv2/flann/flann_base.hpp:
-
 /usr/include/math.h:
 
 /usr/include/c++/11/bits/exception_ptr.h:
@@ -1590,8 +1398,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /usr/include/c++/11/tr1/special_function_util.h:
 
 /usr/include/c++/11/bits/postypes.h:
-
-/usr/include/opencv4/opencv2/stitching/detail/util_inl.hpp:
 
 /usr/include/c++/11/iosfwd:
 
@@ -1629,8 +1435,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/rmw/rmw/init.h:
 
-/usr/include/opencv4/opencv2/calib3d.hpp:
-
 /usr/include/c++/11/bits/parse_numbers.h:
 
 /usr/include/aarch64-linux-gnu/bits/timex.h:
@@ -1640,8 +1444,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/rmw/rmw/incompatible_qos_events_statuses.h:
 
 /usr/include/aarch64-linux-gnu/bits/floatn-common.h:
-
-/usr/include/opencv4/opencv2/flann/timer.h:
 
 /opt/ros/humble/include/rcl/rcl/log_level.h:
 
@@ -1693,17 +1495,11 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/libstatistics_collector/libstatistics_collector/topic_statistics_collector/topic_statistics_collector.hpp:
 
-/usr/include/opencv4/opencv2/objdetect.hpp:
-
 /usr/include/c++/11/bits/node_handle.h:
 
 /usr/include/c++/11/iostream:
 
 /opt/ros/humble/include/vision_msgs/vision_msgs/msg/detail/object_hypothesis__traits.hpp:
-
-/usr/include/opencv4/opencv2/flann/autotuned_index.h:
-
-/usr/include/opencv4/opencv2/flann/random.h:
 
 /usr/include/c++/11/array:
 
@@ -1789,8 +1585,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/rclcpp/rclcpp/init_options.hpp:
 
-/usr/include/opencv4/opencv2/ml/ml.inl.hpp:
-
 /usr/lib/gcc/aarch64-linux-gnu/11/include/syslimits.h:
 
 /usr/include/aarch64-linux-gnu/sys/cdefs.h:
@@ -1813,15 +1607,11 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/bits/this_thread_sleep.h:
 
-/usr/include/opencv4/opencv2/flann/any.h:
-
 /usr/include/aarch64-linux-gnu/bits/stdint-intn.h:
 
 /usr/include/aarch64-linux-gnu/bits/fp-logb.h:
 
 /opt/ros/humble/include/rclcpp/rclcpp/topic_statistics_state.hpp:
-
-/usr/include/opencv4/opencv2/core/cuda.inl.hpp:
 
 /usr/include/c++/11/bits/atomic_base.h:
 
@@ -1863,8 +1653,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/asm-generic/errno-base.h:
 
-/usr/include/opencv4/opencv2/flann/general.h:
-
 /opt/ros/humble/include/rmw/rmw/subscription_options.h:
 
 /opt/ros/humble/include/rclcpp/rclcpp/wait_result_kind.hpp:
@@ -1890,8 +1678,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /usr/include/c++/11/bits/shared_ptr.h:
 
 /usr/lib/gcc/aarch64-linux-gnu/11/include/stdint.h:
-
-/usr/include/opencv4/opencv2/stitching/detail/warpers.hpp:
 
 /usr/include/c++/11/cstdio:
 
@@ -2037,8 +1823,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/aarch64-linux-gnu/bits/floatn.h:
 
-/usr/include/opencv4/opencv2/flann/miniflann.hpp:
-
 /usr/include/c++/11/ext/alloc_traits.h:
 
 /usr/include/c++/11/bits/hashtable_policy.h:
@@ -2061,8 +1845,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /usr/include/c++/11/bits/vector.tcc:
 
-/usr/include/opencv4/opencv2/flann/kmeans_index.h:
-
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/msg/detail/parameter__struct.hpp:
 
 /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/get_node_parameters_interface.hpp:
@@ -2080,8 +1862,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/libstatistics_collector/libstatistics_collector/collector/collector.hpp:
 
 /usr/include/c++/11/cstdlib:
-
-/usr/include/opencv4/opencv2/flann/result_set.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/struct_timeval.h:
 
@@ -2146,8 +1926,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/rcl/rcl/guard_condition.h:
 
 /usr/include/aarch64-linux-gnu/bits/time64.h:
-
-/usr/include/opencv4/opencv2/core/cuda_types.hpp:
 
 /opt/ros/humble/include/sensor_msgs/sensor_msgs/msg/rosidl_generator_cpp__visibility_control.hpp:
 
@@ -2228,8 +2006,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/srv/detail/set_parameters__traits.hpp:
 
 /opt/ros/humble/include/rcutils/rcutils/types/rcutils_ret.h:
-
-/usr/include/c++/11/math.h:
 
 /opt/ros/humble/include/libstatistics_collector/libstatistics_collector/visibility_control.hpp:
 
@@ -2321,15 +2097,11 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/rmw/rmw/macros.h:
 
-/usr/include/opencv4/opencv2/flann/ground_truth.h:
-
 /usr/include/c++/11/bits/stream_iterator.h:
 
 /opt/ros/humble/include/rcpputils/rcpputils/shared_library.hpp:
 
 /opt/ros/humble/include/rmw/rmw/subscription_content_filter_options.h:
-
-/usr/include/opencv4/opencv2/photo.hpp:
 
 /opt/ros/humble/include/rcl_interfaces/rcl_interfaces/msg/detail/list_parameters_result__builder.hpp:
 
@@ -2350,8 +2122,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/rcl_yaml_param_parser/rcl_yaml_param_parser/types.h:
 
 /usr/lib/gcc/aarch64-linux-gnu/11/include/stdalign.h:
-
-/usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp:
 
 /opt/ros/humble/include/rcl/rcl/node_options.h:
 
@@ -2444,8 +2214,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /usr/include/c++/11/bits/stl_iterator_base_types.h:
 
 /opt/ros/humble/include/rcl/rcl/time.h:
-
-/usr/include/opencv4/opencv2/flann/dist.h:
 
 /usr/include/opencv4/opencv2/core/persistence.hpp:
 
@@ -2647,8 +2415,6 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 
 /opt/ros/humble/include/rclcpp/rclcpp/node_interfaces/node_timers_interface.hpp:
 
-/usr/include/opencv4/opencv2/video.hpp:
-
 /opt/ros/humble/include/rclcpp/rclcpp/experimental/create_intra_process_buffer.hpp:
 
 /opt/ros/humble/include/geometry_msgs/geometry_msgs/msg/detail/vector3__struct.hpp:
@@ -2718,7 +2484,5 @@ CMakeFiles/YoloDepthFuser.dir/src/YoloDepthFuser.cpp.o: /Users/annabethpan/Docum
 /opt/ros/humble/include/builtin_interfaces/builtin_interfaces/msg/detail/duration__traits.hpp:
 
 /usr/include/c++/11/numeric:
-
-/usr/include/opencv4/opencv2/stitching/detail/blenders.hpp:
 
 /usr/include/c++/11/pstl/glue_numeric_defs.h:

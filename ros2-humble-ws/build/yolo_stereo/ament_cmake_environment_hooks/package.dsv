@@ -1,4 +1,0 @@
-source;share/yolo_stereo/local_setup.bash
-source;share/yolo_stereo/local_setup.dsv
-source;share/yolo_stereo/local_setup.sh
-source;share/yolo_stereo/local_setup.zsh

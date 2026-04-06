@@ -1,3 +1,3 @@
-[submodule "ros2-humble-ws/src/ros2-camera-node-vizionsdk"]
-	path = ros2-humble-ws/src/ros2-camera-node-vizionsdk
+[submodule "ros2_ws/src/ros2-camera-node-vizionsdk"]
+	path = ros2_ws/src/ros2-camera-node-vizionsdk
 	url = https://github.com/Storby42/ros2-camera-node-vizionsdk

@@ -5,6 +5,7 @@ import rclpy
 import yaml
 import cv2
 import numpy as np
+import os
 
 from rclpy.node import Node
 from sensor_msgs.msg import CameraInfo, Image, CompressedImage

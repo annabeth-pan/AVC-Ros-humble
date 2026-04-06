@@ -10,9 +10,9 @@
 
 
 #include <image_transport/image_transport.hpp> // Using image_transport allows us to publish and subscribe to compressed image streams in ROS2
-#include <opencv2/opencv.hpp> // We include everything about OpenCV as we don't care much about compilation time at the moment.
-// #include <opencv2/core.hpp>
-// #include <opencv2/imgproc.hpp>
+//#include <opencv2/opencv.hpp> // We include everything about OpenCV as we don't care much about compilation time at the moment.
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include "rclcpp/rclcpp.hpp"
 #include "vision_msgs/msg/detection3_d_array.hpp"
@@ -20,10 +20,13 @@
 #include "stereo_msgs/msg/disparity_image.hpp"
 
 #define BUFFER_LEN 5 // the actual buffer is BUFFER_LEN-1 because of how the buffer works lol
-#define MAX_TIME_DIFF .01 // in seconds
-#define CROP_RATIO .1 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
+#define MAX_TIME_DIFF .01 // in seconds between the disparity image and detection
+#define CROP_RATIO .08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS .5 // in m
+#define BASE_LINK_OFFSET .114 // in m. distance from cameras to base link
+#define T .256 // distance between cameras in m
+#define f .0039 // focal length of cameras in m
 
 using namespace std::chrono_literals;
 
@@ -47,9 +50,7 @@ class YoloDepthFuser : public rclcpp::Node
     class Disparity {
       public:
         cv::Mat disparity_image;
-        rclcpp::Time timestamp; // fix: was rclpp::Time
-        float f;
-        float T;
+        rclcpp::Time timestamp;
     };
     std::array<std::optional<Disparity>, BUFFER_LEN> disparities_buffer;
 
@@ -123,7 +124,7 @@ class YoloDepthFuser : public rclcpp::Node
                                cv::Range(det.bbox_centery - det.bbox_sizey*CROP_RATIO, det.bbox_centery + det.bbox_sizey*CROP_RATIO),
                                cv::Range(det.bbox_centerx - det.bbox_sizex*CROP_RATIO, det.bbox_centerx + det.bbox_sizex*CROP_RATIO));
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = disp.f*disp.T/medianMat(cropped) - BUCKET_RADIUS; // called relx for consistency with buckalization
+        float relx = f*T/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET; // called relx for consistency with buckalization
         
         // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
@@ -172,17 +173,15 @@ class YoloDepthFuser : public rclcpp::Node
     {
       Disparity disp;
       disp.disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disparity->image))->image;
-      disp.f = disparity->f;
-      disp.T = disparity->t;
       disp.timestamp = disparity->header.stamp;
       
       add_to_buf(disparities_buffer, disp);
       // check if detections/disparity callback has a header that matches up
-      try_match_times(); // fix: was missing
+      try_match_times();
     }
     rclcpp::Subscription<stereo_msgs::msg::DisparityImage>::SharedPtr stereo_disparityimg_subscription_;
     
-    size_t count_; // fix: was commented out but still referenced in constructor initializer
+    size_t count_;
 };
 
 int main(int argc, char * argv[])

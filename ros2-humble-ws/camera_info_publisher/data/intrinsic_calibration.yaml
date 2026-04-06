@@ -1,0 +1,26 @@
+image_width: 640
+image_height: 480
+camera_name: VLS-GM2-AR0234-SL
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [ 1300, 0,    960,
+          0.,   1300, 600,
+          0.,   0.,   1.  ]
+camera_model: VL-GM2-8CAM-RPI22
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [0, 0, 0, 0, 0, 0]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [ 1.,  0.,  0.,
+          0.,  1.,  0.,
+          0.,  0.,  1.]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [ 1300,   0.,    960,     0.     ,
+          0.,     1300,  600,     0.     ,
+          0.,     0.,    1. ,     0.     ]

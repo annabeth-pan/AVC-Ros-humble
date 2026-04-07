@@ -22,7 +22,7 @@ class CameraInfoPublisher(Node):
         #self._filename = self.declare_parameter('file', '').value
         camera_dir = get_package_share_directory('camera_info_publisher') 
         parameters_file_dir = os.path.join(camera_dir, 'data') 
-        parameters_file_path = os.path.join(parameters_file_dir, 'instrinsic_calibration.yaml')
+        parameters_file_path = os.path.join(parameters_file_dir, 'intrinsic_calibration.yaml')
         self._filename = parameters_file_path
 
         if self._filename == '':

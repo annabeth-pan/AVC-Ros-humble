@@ -15,7 +15,7 @@ from ament_index_python.packages import get_package_share_directory
 class CameraInfoPublisher(Node):
     def __init__(self):
         super().__init__('camera_info_publisher')
-        self._input_topic = self.declare_parameter('input_topic', 'image_raw').value
+        self._input_topic = self.declare_parameter('input_topic', 'left/image_rect').value
         self._use_raw = self.declare_parameter('use_raw', True).value
         self.__alpha = self.declare_parameter('alpha', 0).value
 

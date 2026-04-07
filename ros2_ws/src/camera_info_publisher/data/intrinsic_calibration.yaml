@@ -11,7 +11,7 @@ camera_model: VL-GM2-8CAM-RPI22
 distortion_coefficients:
   rows: 1
   cols: 5
-  data: [0, 0, 0, 0, 0, 0]
+  data: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 rectification_matrix:
   rows: 3
   cols: 3

@@ -7,7 +7,7 @@ camera_matrix:
   data: [ 1300.0, 0.0,    960.0,
           0.0,   1300.0, 600.0,
           0.0,   0.0,   1.0  ]
-camera_model: VL-GM2-8CAM-RPI22
+camera_model: equidistant
 distortion_coefficients:
   rows: 1
   cols: 5

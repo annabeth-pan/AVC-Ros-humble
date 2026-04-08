@@ -13,6 +13,7 @@ find_package(stereo_msgs REQUIRED)
 find_package(vision_msgs REQUIRED)
 find_package(cv_bridge REQUIRED)
 find_package(image_transport REQUIRED)
+find_package(message_filters REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc) # COMPONENTS core imgproc
 
 add_executable(YoloDepthFuser src/YoloDepthFuser.cpp)

@@ -26,13 +26,14 @@
 #include "stereo_msgs/msg/disparity_image.hpp"
 
 #define BUFFER_LEN 10
-#define MAX_TIME_DIFF .01 // in seconds between the disparity image and detection
-#define CROP_RATIO .08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
+#define MAX_TIME_DIFF 0.01 // in seconds between the disparity image and detection
+#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
-#define BUCKET_RADIUS .5 // in m
-#define BASE_LINK_OFFSET .114 // in m. distance from cameras to base link
+#define BUCKET_RADIUS 0.5 // in m
+#define BASE_LINK_OFFSET_X 0.114 // in m. x distance from cameras to base link
+#define BASE_LINK_OFFSET_Y 0.128 // in m. y distance from left camera to base link (bc YOLO dets are from left camera)
 #define CAMERAS_DIST 0.256 // distance between cameras in m
-#define FOCAL_LEN 0.0039 // focal length of cameras in m
+#define FOCAL_LEN 1300 // focal length of cameras in pixels
 
 using namespace std::chrono_literals;
 
@@ -56,8 +57,8 @@ class YoloDepthFuser : public rclcpp::Node
 
       sync = std::make_shared<message_filters::Synchronizer<message_filters::sync_policies::
         ApproximateTime<vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>>(
-          message_filters::sync_policies::ApproximateTime<vision_msgs::msg::Detection2DArray,
-          stereo_msgs::msg::DisparityImage>(BUFFER_LEN), yolo_detection_subscription_, stereo_disparityimg_subscription_);
+        message_filters::sync_policies::ApproximateTime<vision_msgs::msg::Detection2DArray,
+         stereo_msgs::msg::DisparityImage>(BUFFER_LEN), yolo_detection_subscription_, stereo_disparityimg_subscription_);
 
       sync->setAgePenalty(0.50);
       sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
@@ -69,12 +70,12 @@ class YoloDepthFuser : public rclcpp::Node
     std::shared_ptr<message_filters::Synchronizer<message_filters::sync_policies::ApproximateTime<
         vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>> sync;
 
-    // Source - https://stackoverflow.com/q/30078756
+    // Source - https://stackoverflow.com/q/30078756. Changed from doubles -> floats
     // Posted by CV_User, modified by community. See post 'Timeline' for change history
     // Retrieved 2026-04-02, License - CC BY-SA 4.0
-    double medianMat(cv::Mat Input){    
+    float medianMat(cv::Mat Input){    
       Input = Input.reshape(0,1); // spread Input Mat to single row
-      std::vector<double> vecFromMat;
+      std::vector<float> vecFromMat;
       Input.copyTo(vecFromMat); // Copy Input Mat to vector vecFromMat
       std::nth_element(vecFromMat.begin(), vecFromMat.begin() + vecFromMat.size() / 2, vecFromMat.end());
       return vecFromMat[vecFromMat.size() / 2];
@@ -83,21 +84,23 @@ class YoloDepthFuser : public rclcpp::Node
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
         const stereo_msgs::msg::DisparityImage & disp)
     {
+      cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 
         vision_msgs::msg::Detection3D detection3D;
-        // calculate median disparity of section of bounding box 
-          // specifically the median of a little bit in the middle (hopefully around the part closes to the camera)
-        cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
+        // calculate median disparity of little middle section of bounding box
         cv::Mat cropped = disparity_image(
                                cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
                                cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
+        if (medianMat(cropped) < 0) {continue;} // check that it's valid
+
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET; // called relx for consistency with buckalization
+        float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization
         
-        // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22
+        // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22.
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
-        float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65);
+        // or geometry if you're boring like that; they yield the same end result
+        float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65) + BASE_LINK_OFFSET_Y;
         
         detection3D.results.resize(1);
         detection3D.results[0].pose.pose.position.x = relx;

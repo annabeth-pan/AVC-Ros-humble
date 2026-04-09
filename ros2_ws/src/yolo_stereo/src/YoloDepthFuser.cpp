@@ -141,7 +141,7 @@ class YoloDepthFuser : public rclcpp::Node
       }
 
       final_detections_arr.header.stamp = det_arr.header.stamp;
-      RCLCPP_DEBUG(node->get_logger(), "Stamped and incoming publishing");
+      RCLCPP_INFO(get_logger(), "Stamped and incoming publishing");
       publisher_->publish(final_detections_arr);
     }
     rclcpp::Publisher<vision_msgs::msg::Detection3DArray>::SharedPtr publisher_;

@@ -52,8 +52,8 @@ class YoloDepthFuser : public rclcpp::Node
       // stereo_disparityimg_subscription_ = this->create_subscription<stereo_msgs::msg::DisparityImage>(
       // "PLACEHOLDER2", 10, std::bind(&YoloDepthFuser::disparityimg_callback, this, _1)); // PLACEHOLDER TOPICS
 
-      yolo_detection_subscription_.subscribe(this, "PLACEHOLDER1", qos.get_rmw_qos_profile());
-      stereo_disparityimg_subscription_.subscribe(this, "PLACEHOLDER2", qos.get_rmw_qos_profile());
+      yolo_detection_subscription_.subscribe(this, "/detections_output", qos.get_rmw_qos_profile());
+      stereo_disparityimg_subscription_.subscribe(this, "/disparity", qos.get_rmw_qos_profile());
 
       sync = std::make_shared<message_filters::Synchronizer<message_filters::sync_policies::
         ApproximateTime<vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>>(

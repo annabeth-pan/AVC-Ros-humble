@@ -113,12 +113,14 @@ class YoloDepthFuser : public rclcpp::Node
         vision_msgs::msg::Detection3D detection3D;
         // calculate median disparity of little middle section of bounding box
         cv::Mat cropped = disparity_image(
-                               cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
-                               cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
-        if (medianMat(cropped, 10) < 0) {continue;} // check that it's valid
+              cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
+              cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
+        
+        float medianermaktuallydisparity=medianMat(cropped, NBINS);
+        if (medianermaktuallydisparity < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization
+        float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization
         
         // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22.
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html

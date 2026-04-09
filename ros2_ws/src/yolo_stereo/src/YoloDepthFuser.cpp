@@ -111,7 +111,7 @@ class YoloDepthFuser : public rclcpp::Node
         const stereo_msgs::msg::DisparityImage & disp)
     {
       RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", (det_arr.header.stamp.sec), (disp.header.stamp.sec));
-      cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
+      cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<stereo_msgs::msg::DisparityImage>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 
         vision_msgs::msg::Detection3D detection3D;

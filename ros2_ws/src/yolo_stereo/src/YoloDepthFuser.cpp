@@ -127,6 +127,7 @@ class YoloDepthFuser : public rclcpp::Node
         cv::imshow("apple", cropped);
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
+        RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cv::mean(cropped));
         if (medianermaktuallydisparity < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)

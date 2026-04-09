@@ -22,7 +22,7 @@ target_include_directories(YoloDepthFuser PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_compile_features(YoloDepthFuser PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-target_link_libraries(YoloDepthFuser opencv_core opencv_imgproc PUBLIC rclcpp::rclcpp sensor_msgs::sensor_msgs message_filters::message_filters)
+target_link_libraries(YoloDepthFuser opencv_core opencv_imgproc)
 
 install(TARGETS YoloDepthFuser
   DESTINATION lib/${PROJECT_NAME})

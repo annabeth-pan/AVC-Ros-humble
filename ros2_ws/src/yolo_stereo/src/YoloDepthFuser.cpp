@@ -122,7 +122,7 @@ class YoloDepthFuser : public rclcpp::Node
               cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
               cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
-        RCLCPP_INFO(get_logger(), "Median disparity found to be %d", medianermaktuallydisparity);
+        RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         if (medianermaktuallydisparity < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)

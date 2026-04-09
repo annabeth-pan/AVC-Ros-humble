@@ -37,6 +37,8 @@
 #define FOCAL_LEN 1300 // focal length of cameras in pixels
 
 #define NBINS 10 //Number of bins for histogram of data
+#define MIN_DISP 0
+#define MAX_DISP 255
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -115,11 +117,16 @@ class YoloDepthFuser : public rclcpp::Node
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
       vision_msgs::msg::Detection3DArray final_detections_arr;
 
-      cv::Mat disparity_display;
-      cv::normalize(disparity_image, disparity_display, 0, 255, cv::NORM_MINMAX);
-      disparity_display.convertTo(disparity_display, CV_8U);
-      cv::imshow("incoming disparity image", disparity_display);
-      for (const auto& det : det_arr.detections) { 
+      cv::Mat disp_normalized;
+      disparity_image.convertTo(disp_normalized, CV_32F);
+      disp_normalized = (disp_normalized - MIN_DISP) / MAX_DISP * 255;
+      cv::Mat disp_uint8;
+      disp_normalized.convertTo(disp_uint8, CV_8U);
+      cv::Mat color_map;
+      cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
+      cv::imshow("ess_output", color_map);
+      cv::waitKey(1);
+      for (const auto& det : det_arr.detections) {
         vision_msgs::msg::Detection3D detection3D;
   
         // calculate median disparity of little middle section of bounding box
@@ -130,7 +137,6 @@ class YoloDepthFuser : public rclcpp::Node
             (0.75*det.bbox.size_x*CROP_RATIO), (0.6*det.bbox.size_y*CROP_RATIO));
         cv::Mat cropped = disparity_image(crop_rect);
         cv::imshow("apple", cropped);
-        cv::waitKey(0);
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cv::mean(cropped));

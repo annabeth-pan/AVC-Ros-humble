@@ -115,7 +115,7 @@ class YoloDepthFuser : public rclcpp::Node
         cv::Mat cropped = disparity_image(
                                cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
                                cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
-        if (medianMat(cropped, NBINS) < 0) {continue;} // check that it's valid
+        if (medianMat(cropped, 10) < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
         float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization

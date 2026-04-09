@@ -114,7 +114,7 @@ class YoloDepthFuser : public rclcpp::Node
       cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
       vision_msgs::msg::Detection3DArray final_detections_arr;
-      cv::imshow("incoming disparity image" disparity_image);
+      cv::imshow("incoming disparity image", disparity_image);
       cv::waitKey(0);
       for (const auto& det : det_arr.detections) { 
         vision_msgs::msg::Detection3D detection3D;

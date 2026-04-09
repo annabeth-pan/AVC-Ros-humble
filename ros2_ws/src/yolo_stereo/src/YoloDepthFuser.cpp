@@ -64,9 +64,9 @@ class YoloDepthFuser : public rclcpp::Node
       sync = std::make_shared<message_filters::TimeSynchronizer<vision_msgs::msg::Detection2DArray,
       stereo_msgs::msg::DisparityImage>>(yolo_detection_subscription_, stereo_disparityimg_subscription_, BUFFER_LEN);
 
-      sync->setAgePenalty(0.50);
-      sync->registerCallback(std::bind(&YoloDepthFuser::SyncCallback, this, _1, _2));
-      //sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
+      //sync->setAgePenalty(0.50);
+      //sync->registerCallback(std::bind(&YoloDepthFuser::SyncCallback, this, _1, _2));
+      sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
     }
     
   private:
@@ -110,15 +110,19 @@ class YoloDepthFuser : public rclcpp::Node
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
         const stereo_msgs::msg::DisparityImage & disp)
     {
-      RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", det_arr.header.stamp.sec, disp.header.stamp.sec);
+      RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", (det_arr.header.stamp.sec), (disp.header.stamp.sec));
       cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 
         vision_msgs::msg::Detection3D detection3D;
+  
         // calculate median disparity of little middle section of bounding box
-        cv::Mat cropped = disparity_image(
-              cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
-              cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
+        // cv::Mat cropped = disparity_image(cv::Range((det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO), det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
+        //       cv::Range((det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO), (det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO)));
+        // light ess outputs 480x288, yolo outputs 640x640 (black bars on top and bottom, 80 tall each)
+        cv::Rect crop_rect = cv::Rect(0.75*(det.bbox.center.position.x - .5*det.bbox.size_x*CROP_RATIO), 0.6*(det.bbox.center.position.y - 80 - .5*det.bbox.size_y*CROP_RATIO),
+            (0.75*det.bbox.size_x*CROP_RATIO), (0.6*det.bbox.size_y*CROP_RATIO));
+        cv::Mat cropped = disparity_image(crop_rect);
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         if (medianermaktuallydisparity < 0) {continue;} // check that it's valid

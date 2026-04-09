@@ -45,7 +45,8 @@ class YoloDepthFuser : public rclcpp::Node
     YoloDepthFuser()
     : Node("yolo_depth_fuser")
     {
-      rclcpp::QoS qos = rclcpp::QoS(10);
+      rclcpp::QoS yolo_qos = rclcpp::QoS(50);
+      rclcpp::QoS disp_qos = rclcpp::QoS(10);
 
       publisher_ = this->create_publisher<vision_msgs::msg::Detection3DArray>("fused_vision_measurements", 10);
 
@@ -54,8 +55,8 @@ class YoloDepthFuser : public rclcpp::Node
       // stereo_disparityimg_subscription_ = this->create_subscription<stereo_msgs::msg::DisparityImage>(
       // "PLACEHOLDER2", 10, std::bind(&YoloDepthFuser::disparityimg_callback, this, _1)); // PLACEHOLDER TOPICS
 
-      yolo_detection_subscription_.subscribe(this, "/detections_output", qos.get_rmw_qos_profile());
-      stereo_disparityimg_subscription_.subscribe(this, "/disparity", qos.get_rmw_qos_profile());
+      yolo_detection_subscription_.subscribe(this, "/detections_output", yolo_qos.get_rmw_qos_profile());
+      stereo_disparityimg_subscription_.subscribe(this, "/disparity", disp_qos.get_rmw_qos_profile());
 
       sync = std::make_shared<message_filters::Synchronizer<message_filters::sync_policies::
         ApproximateTime<vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>>(
@@ -107,6 +108,7 @@ class YoloDepthFuser : public rclcpp::Node
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
         const stereo_msgs::msg::DisparityImage & disp)
     {
+      RCLCPP_DEBUG(node->get_logger(), "Time-matched disparity and 2d detections found %d");
       cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 
@@ -115,8 +117,8 @@ class YoloDepthFuser : public rclcpp::Node
         cv::Mat cropped = disparity_image(
               cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
               cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
-        
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
+        RCLCPP_DEBUG(node->get_logger(), "Median disparity found to be %d", medianermaktuallydisparity);
         if (medianermaktuallydisparity < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
@@ -139,7 +141,7 @@ class YoloDepthFuser : public rclcpp::Node
       }
 
       final_detections_arr.header.stamp = det_arr.header.stamp;
-
+      RCLCPP_DEBUG(node->get_logger(), "Stamped and incoming publishing");
       publisher_->publish(final_detections_arr);
     }
     rclcpp::Publisher<vision_msgs::msg::Detection3DArray>::SharedPtr publisher_;

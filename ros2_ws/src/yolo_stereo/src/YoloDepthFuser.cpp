@@ -61,21 +61,19 @@ class YoloDepthFuser : public rclcpp::Node
       yolo_detection_subscription_.subscribe(this, "/detections_output", yolo_qos.get_rmw_qos_profile());
       stereo_disparityimg_subscription_.subscribe(this, "/disparity", disp_qos.get_rmw_qos_profile());
 
-      sync = std::make_shared<message_filters::Synchronizer<message_filters::sync_policies::
-        ApproximateTime<vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>>(
-        message_filters::sync_policies::ApproximateTime<vision_msgs::msg::Detection2DArray,
-         stereo_msgs::msg::DisparityImage>(BUFFER_LEN), yolo_detection_subscription_, stereo_disparityimg_subscription_);
+      sync = std::make_shared<message_filters::TimeSynchronizer<vision_msgs::msg::Detection2DArray,
+      stereo_msgs::msg::DisparityImage>>(yolo_detection_subscription_, stereo_disparityimg_subscription_, BUFFER_LEN);
 
       sync->setAgePenalty(0.50);
-      sync->registerCallback(std::bind(&TimeSyncNode::SyncCallback, this, _1, _2));
+      sync->registerCallback(std::bind(&YoloDepthFuser::SyncCallback, this, _1, _2));
       //sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
     }
     
   private:
     message_filters::Subscriber<vision_msgs::msg::Detection2DArray> yolo_detection_subscription_;
     message_filters::Subscriber<stereo_msgs::msg::DisparityImage> stereo_disparityimg_subscription_;
-    std::shared_ptr<message_filters::Synchronizer<message_filters::sync_policies::ApproximateTime<
-        vision_msgs::msg::Detection2DArray, stereo_msgs::msg::DisparityImage>>> sync;
+    std::shared_ptr<message_filters::TimeSynchronizer<vision_msgs::msg::Detection2DArray,
+      stereo_msgs::msg::DisparityImage>> sync;
 
     // Source - https://stackoverflow.com/q/30078756. Changed from doubles -> floats
     // Posted by CV_User, modified by community. See post 'Timeline' for change history
@@ -112,7 +110,7 @@ class YoloDepthFuser : public rclcpp::Node
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
         const stereo_msgs::msg::DisparityImage & disp)
     {
-      RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", det_arr->header.stamp.sec, disp->header.stamp.sec);
+      RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", det_arr.header.stamp.sec, disp.header.stamp.sec);
       cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 

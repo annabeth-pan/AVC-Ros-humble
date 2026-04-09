@@ -12,10 +12,10 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include <image_transport/image_transport.hpp> // Using image_transport allows us to publish and subscribe to compressed image streams in ROS2
-//#include <opencv2/opencv.hpp> // We include everything about OpenCV as we don't care much about compilation time at the moment.
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
-#include <cv_bridge/cv_bridge.h>
+#include <opencv2/opencv.hpp> // We include everything about OpenCV as we don't care much about compilation time at the moment.
+// #include <opencv2/core.hpp>
+// #include <opencv2/imgproc.hpp>
+// #include <cv_bridge/cv_bridge.h>
 
 //#include "message_filters/subscriber.h"
 #include "message_filters/subscriber.hpp"
@@ -123,6 +123,7 @@ class YoloDepthFuser : public rclcpp::Node
         cv::Rect crop_rect = cv::Rect(0.75*(det.bbox.center.position.x - .5*det.bbox.size_x*CROP_RATIO), 0.6*(det.bbox.center.position.y - 80 - .5*det.bbox.size_y*CROP_RATIO),
             (0.75*det.bbox.size_x*CROP_RATIO), (0.6*det.bbox.size_y*CROP_RATIO));
         cv::Mat cropped = disparity_image(crop_rect);
+        cv::imshow(cropped);
         float medianermaktuallydisparity=medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         if (medianermaktuallydisparity < 0) {continue;} // check that it's valid

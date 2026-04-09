@@ -35,6 +35,8 @@
 #define CAMERAS_DIST 0.256 // distance between cameras in m
 #define FOCAL_LEN 1300 // focal length of cameras in pixels
 
+#define NBINS 10; //Number of bins for histogram of data
+
 using namespace std::chrono_literals;
 
 class YoloDepthFuser : public rclcpp::Node
@@ -73,12 +75,33 @@ class YoloDepthFuser : public rclcpp::Node
     // Source - https://stackoverflow.com/q/30078756. Changed from doubles -> floats
     // Posted by CV_User, modified by community. See post 'Timeline' for change history
     // Retrieved 2026-04-02, License - CC BY-SA 4.0
-    float medianMat(cv::Mat Input){    
-      Input = Input.reshape(0,1); // spread Input Mat to single row
-      std::vector<float> vecFromMat;
-      Input.copyTo(vecFromMat); // Copy Input Mat to vector vecFromMat
-      std::nth_element(vecFromMat.begin(), vecFromMat.begin() + vecFromMat.size() / 2, vecFromMat.end());
-      return vecFromMat[vecFromMat.size() / 2];
+    // float medianMat(cv::Mat Input){    
+    //   Input = Input.reshape(0,1); // spread Input Mat to single row
+    //   std::vector<float> vecFromMat;
+    //   Input.copyTo(vecFromMat); // Copy Input Mat to vector vecFromMat
+    //   std::nth_element(vecFromMat.begin(), vecFromMat.begin() + vecFromMat.size() / 2, vecFromMat.end());
+    //   return vecFromMat[vecFromMat.size() / 2];
+    // }
+    float medianMat(cv::Mat Input, int nVals){
+      // COMPUTE HISTOGRAM OF SINGLE CHANNEL MATRIX
+      float range[] = { 0, nVals };
+      const float* histRange = { range };
+      bool uniform = true; bool accumulate = false;
+      cv::Mat hist;
+      calcHist(&Input, 1, 0, cv::Mat(), hist, 1, &nVals, &histRange, uniform, accumulate);
+      // COMPUTE CUMULATIVE DISTRIBUTION FUNCTION (CDF)
+      cv::Mat cdf;
+      hist.copyTo(cdf);
+      for (int i = 1; i <= nVals-1; i++){
+        cdf.at<float>(i) += cdf.at<float>(i - 1);
+      }
+      cdf /= Input.total();
+      // COMPUTE MEDIAN
+      float medianVal;
+      for (int i = 0; i <= nVals-1; i++){
+        if (cdf.at<float>(i) >= 0.5) { medianVal = i;  break; }
+      }
+      return medianVal/nVals; 
     }
 
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
@@ -92,7 +115,7 @@ class YoloDepthFuser : public rclcpp::Node
         cv::Mat cropped = disparity_image(
                                cv::Range(det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO, det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
                                cv::Range(det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO, det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO));
-        if (medianMat(cropped) < 0) {continue;} // check that it's valid
+        if (medianMat(cropped, NBINS) < 0) {continue;} // check that it's valid
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
         float relx = FOCAL_LEN*CAMERAS_DIST/medianMat(cropped) - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization

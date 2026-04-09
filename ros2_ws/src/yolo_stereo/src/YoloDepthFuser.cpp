@@ -17,9 +17,10 @@
 #include <opencv2/imgproc.hpp>
 #include <cv_bridge/cv_bridge.h>
 
-#include "message_filters/subscriber.h"
-#include "message_filters/synchronizer.h"
-#include "message_filters/sync_policies/approximate_time.h"
+//#include "message_filters/subscriber.h"
+#include "message_filters/subscriber.hpp"
+//#include "message_filters/synchronizer.h"
+#include "message_filters/time_synchronizer.hpp"
 
 #include "vision_msgs/msg/detection3_d_array.hpp"
 #include "vision_msgs/msg/detection2_d_array.hpp"
@@ -38,6 +39,8 @@
 #define NBINS 10 //Number of bins for histogram of data
 
 using namespace std::chrono_literals;
+using std::placeholders::_1;
+using std::placeholders::_2;
 
 class YoloDepthFuser : public rclcpp::Node
 {
@@ -64,7 +67,8 @@ class YoloDepthFuser : public rclcpp::Node
          stereo_msgs::msg::DisparityImage>(BUFFER_LEN), yolo_detection_subscription_, stereo_disparityimg_subscription_);
 
       sync->setAgePenalty(0.50);
-      sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
+      sync->registerCallback(std::bind(&TimeSyncNode::SyncCallback, this, _1, _2));
+      //sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
     }
     
   private:
@@ -108,7 +112,7 @@ class YoloDepthFuser : public rclcpp::Node
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,
         const stereo_msgs::msg::DisparityImage & disp)
     {
-      RCLCPP_INFO(get_logger(), "Time-matched disparity and 2d detections found %d");
+      RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", det_arr->header.stamp.sec, disp->header.stamp.sec);
       cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
       vision_msgs::msg::Detection3DArray final_detections_arr;
       for (const auto& det : det_arr.detections) { 

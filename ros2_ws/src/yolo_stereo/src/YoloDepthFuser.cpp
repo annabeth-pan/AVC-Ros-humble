@@ -35,7 +35,7 @@
 #define CAMERAS_DIST 0.256 // distance between cameras in m
 #define FOCAL_LEN 1300 // focal length of cameras in pixels
 
-#define NBINS 10; //Number of bins for histogram of data
+#define NBINS 10 //Number of bins for histogram of data
 
 using namespace std::chrono_literals;
 

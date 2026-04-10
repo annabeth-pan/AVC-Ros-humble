@@ -202,7 +202,7 @@ class YoloDepthFuser : public rclcpp::Node
         detection3D.results[0].pose.pose.position.x = relx;
         detection3D.results[0].pose.pose.position.y = rely;
         detection3D.bbox.center=detection3D.results[0].pose.pose;
-        detection3D.bbox.center.z=detection3D.results[0].pose.pose.z+height_m/2;
+        detection3D.bbox.center.position.z=detection3D.results[0].pose.pose.position.z+height_m/2;
 
         
         // do all the other stuff you wanna put in a 3d detection array

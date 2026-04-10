@@ -113,7 +113,20 @@ class YoloDepthFuser : public rclcpp::Node
         const stereo_msgs::msg::DisparityImage & disp)
     {
       RCLCPP_INFO(get_logger(), "Sync callback with %u and %u as times", (det_arr.header.stamp.sec), (disp.header.stamp.sec));
-      cv::Mat disparity_image = cv_bridge::toCvShare(std::make_shared<sensor_msgs::msg::Image>(disp.image))->image;
+      auto image_msg = std::make_shared<sensor_msgs::msg::Image>(disp.image);
+      cv::Mat disparity_image;
+      try {
+        disparity_image = cv_bridge::toCvShare(image_msg, disp.image.encoding)->image;
+      } catch (const cv_bridge::Exception & e) {
+        RCLCPP_ERROR(get_logger(), "cv_bridge error: %s", e.what());
+        return;
+      }
+
+      if (disparity_image.empty()) {
+        RCLCPP_WARN(get_logger(), "Received empty disparity image");
+        return;
+      }
+
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
       vision_msgs::msg::Detection3DArray final_detections_arr;
 
@@ -128,6 +141,7 @@ class YoloDepthFuser : public rclcpp::Node
       cv::waitKey(1);
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
 
+      const cv::Rect image_rect(0, 0, disparity_image.cols, disparity_image.rows);
       for (const auto& det : det_arr.detections) {
         vision_msgs::msg::Detection3D detection3D;
   
@@ -135,14 +149,34 @@ class YoloDepthFuser : public rclcpp::Node
         // cv::Mat cropped = disparity_image(cv::Range((det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO), det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
         //       cv::Range((det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO), (det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO)));
         // light ess outputs 480x288, yolo outputs 640x640 (black bars on top and bottom, 80 tall each)
-        cv::Rect crop_rect = cv::Rect(0.75*(det.bbox.center.position.x - .5*det.bbox.size_x*CROP_RATIO), 0.6*(det.bbox.center.position.y - 80 - .5*det.bbox.size_y*CROP_RATIO),
-            (0.75*det.bbox.size_x*CROP_RATIO), (0.6*det.bbox.size_y*CROP_RATIO));
-        cv::Mat cropped = disparity_image(crop_rect);
+        cv::Rect crop_rect = cv::Rect(
+            static_cast<int>(0.75 * (det.bbox.center.position.x - 0.5 * det.bbox.size_x * CROP_RATIO)),
+            static_cast<int>(0.6 * (det.bbox.center.position.y - 80 - 0.5 * det.bbox.size_y * CROP_RATIO)),
+            static_cast<int>(0.75 * det.bbox.size_x * CROP_RATIO),
+            static_cast<int>(0.6 * det.bbox.size_y * CROP_RATIO)
+        );
+        crop_rect &= image_rect;
+        if (crop_rect.width <= 0 || crop_rect.height <= 0) {
+          RCLCPP_WARN(get_logger(), "Skipping invalid crop rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
+          continue;
+        }
+
+        cv::Mat cropped = disparity_image(crop_rect).clone();
+        if (cropped.empty()) {
+          RCLCPP_WARN(get_logger(), "Skipped empty cropped disparity region");
+          continue;
+        }
         cv::imshow("apple", cropped);
-        float medianermaktuallydisparity=medianMat(cropped, NBINS);
+        float medianermaktuallydisparity = medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cv::mean(cropped));
-        if (medianermaktuallydisparity < 0) {continue;} // check that it's valid
+        if (medianermaktuallydisparity < 0) {
+          continue;
+        }
+        if (det.results.empty()) {
+          RCLCPP_WARN(get_logger(), "Skipping detection with no results");
+          continue;
+        }
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
         float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization

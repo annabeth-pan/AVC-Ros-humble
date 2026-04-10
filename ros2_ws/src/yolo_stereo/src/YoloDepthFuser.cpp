@@ -29,7 +29,7 @@
 #define BUFFER_LEN 10
 #define MAX_TIME_DIFF 0.01 // in seconds between the disparity image and detection
 //#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
-#define CROP_RATIO 1
+#define CROP_RATIO 0.5
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS 0.5 // in m
 #define BASE_LINK_OFFSET_X 0.114 // in m. x distance from cameras to base link
@@ -170,7 +170,7 @@ class YoloDepthFuser : public rclcpp::Node
         cv::imshow("apple", cropped);
         float medianermaktuallydisparity = medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
-        RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cv::mean(cropped));
+        RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cropped.mean(0));
         if (medianermaktuallydisparity < 0) {
           continue;
         }

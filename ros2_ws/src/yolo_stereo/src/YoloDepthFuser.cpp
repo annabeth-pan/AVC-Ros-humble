@@ -89,31 +89,30 @@ class YoloDepthFuser : public rclcpp::Node
     //   return vecFromMat[vecFromMat.size() / 2];
     // }
     float medianMat(cv::Mat Input, int nVals){
-      // COMPUTE HISTOGRAM OF SINGLE CHANNEL MATRIX
-      float range[] = { 0, nVals };
+      double minVal, maxVal;
+      cv::minMaxLoc(Input, &minVal, &maxVal);
+      if (minVal == maxVal) {
+        return static_cast<float>(minVal);
+      }
+      float range[] = { static_cast<float>(minVal), static_cast<float>(maxVal) };
       const float* histRange = { range };
       bool uniform = true; bool accumulate = false;
       cv::Mat hist;
       calcHist(&Input, 1, 0, cv::Mat(), hist, 1, &nVals, &histRange, uniform, accumulate);
-
-      // Print the hist mat
-      for (int i = 0; i < hist.rows; ++i) {
-        RCLCPP_INFO(get_logger(), "Hist[%d]: %f", i, hist.at<float>(i));
-      }
-      
-      // COMPUTE CUMULATIVE DISTRIBUTION FUNCTION (CDF)
-      cv::Mat cdf;
-      hist.copyTo(cdf);
-      for (int i = 1; i <= nVals-1; i++){
-        cdf.at<float>(i) += cdf.at<float>(i - 1);
+      cv::Mat cdf = cv::Mat::zeros(nVals, 1, CV_32F);
+      cdf.at<float>(0) = hist.at<float>(0);
+      for (int i = 1; i < nVals; i++){
+        cdf.at<float>(i) = cdf.at<float>(i-1) + hist.at<float>(i);
       }
       cdf /= Input.total();
-      // COMPUTE MEDIAN
-      float medianVal;
-      for (int i = 0; i <= nVals-1; i++){
-        if (cdf.at<float>(i) >= 0.5) { medianVal = i;  break; }
+      float median;
+      for (int i = 0; i < nVals; i++){
+        if (cdf.at<float>(i) >= 0.5) {
+          median = static_cast<float>(minVal + (i + 0.5) * (maxVal - minVal) / nVals);
+          break;
+        }
       }
-      return medianVal/nVals; 
+      return median;
     }
 
     void SyncCallback(const vision_msgs::msg::Detection2DArray & det_arr,

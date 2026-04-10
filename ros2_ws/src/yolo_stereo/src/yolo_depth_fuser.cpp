@@ -215,7 +215,7 @@ class yolo_depth_fuser : public rclcpp::Node
         // do all the other stuff you wanna put in a 3d detection array
         detection3D.results[0].hypothesis.score = det.results[0].hypothesis.score;
         detection3D.results[0].hypothesis.class_id = det.results[0].hypothesis.class_id;
-        detection3D.results[0].id = det.results[0].hypothesis.class_id;
+        detection3D.id = det.results[0].hypothesis.class_id;
 
         RCLCPP_INFO(get_logger(), "3D Detection: center (%.2f, %.2f, %.2f), size (%.2f, %.2f, %.2f), class_id '%s' score %.2f",
             detection3D.bbox.center.position.x, detection3D.bbox.center.position.y, detection3D.bbox.center.position.z,

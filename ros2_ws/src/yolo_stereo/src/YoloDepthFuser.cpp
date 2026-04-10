@@ -190,10 +190,20 @@ class YoloDepthFuser : public rclcpp::Node
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
         // or geometry if you're boring like that; they yield the same end result
         float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65) + BASE_LINK_OFFSET_Y;
+
+        // estimate object size in meters from 2D bbox pixel dimensions and distance
+        float width_m = det.bbox.size_x * relx / FOCAL_LEN;
+        float height_m = det.bbox.size_y * relx / FOCAL_LEN;
+        detection3D.bbox.size.x = width_m;
+        detection3D.bbox.size.y = width_m;
+        detection3D.bbox.size.z = height_m;
         
         detection3D.results.resize(1);
         detection3D.results[0].pose.pose.position.x = relx;
         detection3D.results[0].pose.pose.position.y = rely;
+        detection3D.bbox.center=detection3D.results[0].pose.pose;
+        detection3D.bbox.center.z=detection3D.results[0].pose.pose.z+height_m/2;
+
         
         // do all the other stuff you wanna put in a 3d detection array
         detection3D.results[0].hypothesis.score = det.results[0].hypothesis.score;

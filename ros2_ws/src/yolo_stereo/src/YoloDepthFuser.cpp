@@ -154,8 +154,8 @@ class YoloDepthFuser : public rclcpp::Node
         // light ess outputs 480x288, yolo outputs 640x640 (black bars on top and bottom, 80 tall each)
         RCLCPP_INFO(get_logger(), "Detection at: x=%d y=%d w=%d h=%d", det.bbox.center.position.x, det.bbox.center.position.y, det.bbox.size_x, det.bbox.size_y);
         cv::Rect crop_rect = cv::Rect(
-            static_cast<int>(0.75 * ((det.bbox.center.position.x - 0.5 * det.bbox.size_x) * CROP_RATIO)),
-            static_cast<int>(0.6 * (((det.bbox.center.position.y - 80) - 0.5 * det.bbox.size_y) * CROP_RATIO)),
+            static_cast<int>(0.75 * (det.bbox.center.position.x - 0.5 * det.bbox.size_x * CROP_RATIO)),
+            static_cast<int>(0.6 * ((det.bbox.center.position.y - 80) - 0.5 * det.bbox.size_y * CROP_RATIO)),
             static_cast<int>(0.75 * det.bbox.size_x * CROP_RATIO),
             static_cast<int>(0.6 * det.bbox.size_y * CROP_RATIO)
         );

@@ -1,0 +1,2 @@
+engine_file_path: /home/nvidia/AVC-Ros-humble/ros2_ws/isaac_ros_assets/models/dnn_stereo_disparity/dnn_stereo_disparity_v4.1.0_onnx/light_ess.engine
+threshold: 0.0

@@ -28,7 +28,8 @@
 
 #define BUFFER_LEN 10
 #define MAX_TIME_DIFF 0.01 // in seconds between the disparity image and detection
-#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
+//#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
+#define CROP_RATIO 1
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS 0.5 // in m
 #define BASE_LINK_OFFSET_X 0.114 // in m. x distance from cameras to base link
@@ -139,7 +140,6 @@ class YoloDepthFuser : public rclcpp::Node
       cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
       cv::imshow("ess_output", color_map);
       cv::waitKey(1);
-      RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
 
       const cv::Rect image_rect(0, 0, disparity_image.cols, disparity_image.rows);
       for (const auto& det : det_arr.detections) {

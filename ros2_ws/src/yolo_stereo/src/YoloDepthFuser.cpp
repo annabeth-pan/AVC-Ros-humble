@@ -138,8 +138,6 @@ class YoloDepthFuser : public rclcpp::Node
       disp_normalized.convertTo(disp_uint8, CV_8U);
       cv::Mat color_map;
       cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
-      cv::imshow("ess_output", color_map);
-      cv::waitKey(1);
 
       const cv::Rect image_rect(0, 0, disparity_image.cols, disparity_image.rows);
       for (const auto& det : det_arr.detections) {
@@ -149,18 +147,21 @@ class YoloDepthFuser : public rclcpp::Node
         // cv::Mat cropped = disparity_image(cv::Range((det.bbox.center.position.y - det.bbox.size_y*CROP_RATIO), det.bbox.center.position.y + det.bbox.size_y*CROP_RATIO),
         //       cv::Range((det.bbox.center.position.x - det.bbox.size_x*CROP_RATIO), (det.bbox.center.position.x + det.bbox.size_x*CROP_RATIO)));
         // light ess outputs 480x288, yolo outputs 640x640 (black bars on top and bottom, 80 tall each)
+        RCLCPP_INFO(get_logger(), "Detection at: x=%d y=%d w=%d h=%d", det.bbox.center.position.x, det.bbox.center.position.y, det.bbox.size_x, det.bbox.size_y);
         cv::Rect crop_rect = cv::Rect(
-            static_cast<int>(0.75 * (det.bbox.center.position.x - 0.5 * det.bbox.size_x * CROP_RATIO)),
-            static_cast<int>(0.6 * (det.bbox.center.position.y - 80 - 0.5 * det.bbox.size_y * CROP_RATIO)),
+            static_cast<int>(0.75 * ((det.bbox.center.position.x - 0.5 * det.bbox.size_x) * CROP_RATIO)),
+            static_cast<int>(0.6 * (((det.bbox.center.position.y - 80) - 0.5 * det.bbox.size_y) * CROP_RATIO)),
             static_cast<int>(0.75 * det.bbox.size_x * CROP_RATIO),
             static_cast<int>(0.6 * det.bbox.size_y * CROP_RATIO)
         );
         crop_rect &= image_rect;
+        RCLCPP_INFO(get_logger(), "Cropped detection rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
         if (crop_rect.width <= 0 || crop_rect.height <= 0) {
           RCLCPP_WARN(get_logger(), "Skipping invalid crop rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
           continue;
         }
 
+        cv::rectangle(color_map, crop_rect, cv::Scalar(0, 255, 0), 2);
         cv::Mat cropped = disparity_image(crop_rect).clone();
         if (cropped.empty()) {
           RCLCPP_WARN(get_logger(), "Skipped empty cropped disparity region");
@@ -196,6 +197,9 @@ class YoloDepthFuser : public rclcpp::Node
 
         final_detections_arr.detections.push_back(detection3D);
       }
+
+      cv::imshow("ess_output", color_map);
+      cv::waitKey(1);
 
       final_detections_arr.header.stamp = det_arr.header.stamp;
       RCLCPP_INFO(get_logger(), "Stamped and incoming publishing");

@@ -31,7 +31,7 @@
 //#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
 #define CROP_RATIO 0.5
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
-#define BUCKET_RADIUS 0.16 // in m
+#define BUCKET_RADIUS 0.5 // in m
 #define CAMERAS_DIST 0.256 // distance between cameras in m
 #define FOCAL_LEN 488 // focal length of cameras in pixels, calculated to be 1300, bean has a weird hypothesis about depth map resolution, acting weird at that number.
 

@@ -217,7 +217,7 @@ class yolo_depth_fuser : public rclcpp::Node
 
         RCLCPP_INFO(get_logger(), "3D Detection: center (%.2f, %.2f, %.2f), size (%.2f, %.2f, %.2f), id %s score %f ",
             detection3D.bbox.center.position.x, detection3D.bbox.center.position.y, detection3D.bbox.center.position.z,
-            detection3D.bbox.size.x, detection3D.bbox.size.y, detection3D.bbox.size.z, detection3D.results[0].hypothesis.class_id, detection3D.results[0].hypothesis.score);
+            detection3D.bbox.size.x, detection3D.bbox.size.y, detection3D.bbox.size.z, detection3D.results[0].hypothesis.class_id, std::to_string(detection3D.results[0].hypothesis.score));
 
         final_detections_arr.detections.push_back(detection3D);
       }

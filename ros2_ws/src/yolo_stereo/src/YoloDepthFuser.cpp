@@ -176,7 +176,6 @@ class YoloDepthFuser : public rclcpp::Node
         cv::imshow("apple", cropped);
         float medianermaktuallydisparity = medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
-        RCLCPP_INFO(get_logger(), "Mean disparity found to be %f", cropped.mean(0));
         if (medianermaktuallydisparity < 0) {
           continue;
         }

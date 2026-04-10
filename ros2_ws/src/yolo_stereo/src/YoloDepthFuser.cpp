@@ -205,7 +205,8 @@ class YoloDepthFuser : public rclcpp::Node
       cv::imshow("ess_output", color_map);
       cv::waitKey(1);
 
-      final_detections_arr.header.stamp = det_arr.header.stamp;
+      //final_detections_arr.header.stamp = det_arr.header.stamp;
+      final_detections_arr.header = disp.header;
       RCLCPP_INFO(get_logger(), "Stamped and incoming publishing");
       publisher_->publish(final_detections_arr);
     }

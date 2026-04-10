@@ -126,6 +126,8 @@ class YoloDepthFuser : public rclcpp::Node
       cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
       cv::imshow("ess_output", color_map);
       cv::waitKey(1);
+      RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
+
       for (const auto& det : det_arr.detections) {
         vision_msgs::msg::Detection3D detection3D;
   

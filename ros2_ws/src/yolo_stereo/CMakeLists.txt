@@ -16,15 +16,15 @@ find_package(image_transport REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(OpenCV REQUIRED) # COMPONENTS core imgproc
 
-add_executable(YoloDepthFuser src/YoloDepthFuser.cpp)
-ament_target_dependencies(YoloDepthFuser rclcpp std_msgs stereo_msgs vision_msgs cv_bridge image_transport OpenCV) # OpenCV
-target_include_directories(YoloDepthFuser PUBLIC
+add_executable(yolo_depth_fuser src/yolo_depth_fuser.cpp)
+ament_target_dependencies(yolo_depth_fuser rclcpp std_msgs stereo_msgs vision_msgs cv_bridge image_transport OpenCV) # OpenCV
+target_include_directories(yolo_depth_fuser PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
-target_compile_features(YoloDepthFuser PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-target_link_libraries(YoloDepthFuser) # opencv_core opencv_imgproc
+target_compile_features(yolo_depth_fuser PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+target_link_libraries(yolo_depth_fuser) # opencv_core opencv_imgproc
 
-install(TARGETS YoloDepthFuser
+install(TARGETS yolo_depth_fuser
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

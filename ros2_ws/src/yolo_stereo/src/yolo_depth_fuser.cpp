@@ -32,12 +32,10 @@
 #define CROP_RATIO 0.5
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS 0.5 // in m
-#define BASE_LINK_OFFSET_X 0.114 // in m. x distance from cameras to base link
-#define BASE_LINK_OFFSET_Y 0.128 // in m. y distance from left camera to base link (bc YOLO dets are from left camera)
 #define CAMERAS_DIST 0.256 // distance between cameras in m
 #define FOCAL_LEN 1300 // focal length of cameras in pixels
 
-#define NBINS 3 //Number of bins for histogram of data
+#define NBINS 5 //Number of bins for histogram of data
 #define MIN_DISP 0
 #define MAX_DISP 255
 
@@ -45,10 +43,10 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 using std::placeholders::_2;
 
-class YoloDepthFuser : public rclcpp::Node
+class yolo_depth_fuser : public rclcpp::Node
 {
   public:
-    YoloDepthFuser()
+    yolo_depth_fuser()
     : Node("yolo_depth_fuser")
     {
       rclcpp::QoS yolo_qos = rclcpp::QoS(50);
@@ -56,10 +54,13 @@ class YoloDepthFuser : public rclcpp::Node
 
       publisher_ = this->create_publisher<vision_msgs::msg::Detection3DArray>("fused_vision_measurements", 10);
 
+      this->declare_parameter("view_overlay", false);
+      this->get_parameter("view_overlay", view_overlay_);
+
       // yolo_detection_subscription_ = this->create_subscription<vision_msgs::msg::Detection2DArray>(
-      // "PLACEHOLDER1", 10, std::bind(&YoloDepthFuser::detection_callback, this, _1)); // PLACEHOLDER TOPICS
+      // "PLACEHOLDER1", 10, std::bind(&yolo_depth_fuser::detection_callback, this, _1)); // PLACEHOLDER TOPICS
       // stereo_disparityimg_subscription_ = this->create_subscription<stereo_msgs::msg::DisparityImage>(
-      // "PLACEHOLDER2", 10, std::bind(&YoloDepthFuser::disparityimg_callback, this, _1)); // PLACEHOLDER TOPICS
+      // "PLACEHOLDER2", 10, std::bind(&yolo_depth_fuser::disparityimg_callback, this, _1)); // PLACEHOLDER TOPICS
 
       yolo_detection_subscription_.subscribe(this, "/detections_output", yolo_qos.get_rmw_qos_profile());
       stereo_disparityimg_subscription_.subscribe(this, "/disparity", disp_qos.get_rmw_qos_profile());
@@ -68,8 +69,8 @@ class YoloDepthFuser : public rclcpp::Node
       stereo_msgs::msg::DisparityImage>>(yolo_detection_subscription_, stereo_disparityimg_subscription_, BUFFER_LEN);
 
       //sync->setAgePenalty(0.50);
-      //sync->registerCallback(std::bind(&YoloDepthFuser::SyncCallback, this, _1, _2));
-      sync->registerCallback(&YoloDepthFuser::SyncCallback, this);
+      //sync->registerCallback(std::bind(&yolo_depth_fuser::SyncCallback, this, _1, _2));
+      sync->registerCallback(&yolo_depth_fuser::SyncCallback, this);
     }
     
   private:
@@ -77,6 +78,8 @@ class YoloDepthFuser : public rclcpp::Node
     message_filters::Subscriber<stereo_msgs::msg::DisparityImage> stereo_disparityimg_subscription_;
     std::shared_ptr<message_filters::TimeSynchronizer<vision_msgs::msg::Detection2DArray,
       stereo_msgs::msg::DisparityImage>> sync;
+
+    bool view_overlay_;
 
     // Source - https://stackoverflow.com/q/30078756. Changed from doubles -> floats
     // Posted by CV_User, modified by community. See post 'Timeline' for change history
@@ -136,14 +139,16 @@ class YoloDepthFuser : public rclcpp::Node
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
       vision_msgs::msg::Detection3DArray final_detections_arr;
 
-      cv::Mat disp_normalized;
-      disparity_image.convertTo(disp_normalized, CV_32F);
-      disp_normalized = (disp_normalized - MIN_DISP) / MAX_DISP * 255;
-      cv::Mat disp_uint8;
-      disp_normalized.convertTo(disp_uint8, CV_8U);
-      cv::Mat color_map;
-      cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
-
+      if(view_overlay_){
+        cv::Mat disp_normalized;
+        disparity_image.convertTo(disp_normalized, CV_32F);
+        disp_normalized = (disp_normalized - MIN_DISP) / MAX_DISP * 255;
+        cv::Mat disp_uint8;
+        disp_normalized.convertTo(disp_uint8, CV_8U);
+        cv::Mat color_map;
+        cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
+      }
+      
       const cv::Rect image_rect(0, 0, disparity_image.cols, disparity_image.rows);
       for (const auto& det : det_arr.detections) {
         vision_msgs::msg::Detection3D detection3D;
@@ -160,7 +165,7 @@ class YoloDepthFuser : public rclcpp::Node
             static_cast<int>(0.6 * det.bbox.size_y * CROP_RATIO)
         );
         crop_rect &= image_rect;
-        RCLCPP_INFO(get_logger(), "Cropped detection rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
+        RCLCPP_DEBUG(get_logger(), "Cropped detection rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
         if (crop_rect.width <= 0 || crop_rect.height <= 0) {
           RCLCPP_WARN(get_logger(), "Skipping invalid crop rect: x=%d y=%d w=%d h=%d", crop_rect.x, crop_rect.y, crop_rect.width, crop_rect.height);
           continue;
@@ -172,7 +177,7 @@ class YoloDepthFuser : public rclcpp::Node
           RCLCPP_WARN(get_logger(), "Skipped empty cropped disparity region");
           continue;
         }
-        cv::imshow("apple", cropped);
+        //cv::imshow("apple", cropped);
         float medianermaktuallydisparity = medianMat(cropped, NBINS);
         RCLCPP_INFO(get_logger(), "Median disparity found to be %f", medianermaktuallydisparity);
         if (medianermaktuallydisparity < 0) {
@@ -184,12 +189,12 @@ class YoloDepthFuser : public rclcpp::Node
         }
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity - BUCKET_RADIUS + BASE_LINK_OFFSET_X; // called relx for consistency with buckalization
+        float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity - BUCKET_RADIUS; // called relx for consistency with buckalization
         
         // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22.
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
         // or geometry if you're boring like that; they yield the same end result
-        float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65) + BASE_LINK_OFFSET_Y;
+        float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65);
 
         // estimate object size in meters from 2D bbox pixel dimensions and distance
         float width_m = det.bbox.size_x * relx / FOCAL_LEN;
@@ -209,11 +214,18 @@ class YoloDepthFuser : public rclcpp::Node
         detection3D.results[0].hypothesis.score = det.results[0].hypothesis.score;
         detection3D.results[0].hypothesis.class_id = det.results[0].hypothesis.class_id;
 
+        RCLCPP_INFO(get_logger(), "3D Detection: center (%.2f, %.2f, %.2f), size (%.2f, %.2f, %.2f), id %f score %f ",
+            detection3D.bbox.center.position.x, detection3D.bbox.center.position.y, detection3D.bbox.center.position.z,
+            detection3D.bbox.size.x, detection3D.bbox.size.y, detection3D.bbox.size.z, detection3D.results[0].hypothesis.score, detection3D.results[0].hypothesis.class_id);
+
         final_detections_arr.detections.push_back(detection3D);
       }
 
-      cv::imshow("ess_output", color_map);
-      cv::waitKey(1);
+      if(view_overlay_){
+        cv::imshow("ess_output", color_map);
+        cv::waitKey(1);
+      }
+      
 
       //final_detections_arr.header.stamp = det_arr.header.stamp;
       final_detections_arr.header = disp.header;
@@ -226,7 +238,7 @@ class YoloDepthFuser : public rclcpp::Node
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<YoloDepthFuser>());
+  rclcpp::spin(std::make_shared<yolo_depth_fuser>());
   rclcpp::shutdown();
   return 0;
 }

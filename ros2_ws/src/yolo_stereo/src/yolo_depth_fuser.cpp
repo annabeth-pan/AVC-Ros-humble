@@ -31,9 +31,9 @@
 //#define CROP_RATIO 0.08 // CROP_RATIO*2 = the percent of the bucket per dimension that is included in the crop
 #define CROP_RATIO 0.5
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
-#define BUCKET_RADIUS 0.5 // in m
+#define BUCKET_RADIUS 0.16 // in m
 #define CAMERAS_DIST 0.256 // distance between cameras in m
-#define FOCAL_LEN 1300 // focal length of cameras in pixels
+#define FOCAL_LEN 650 // focal length of cameras in pixels
 
 #define NBINS 5 //Number of bins for histogram of data
 #define MIN_DISP 0
@@ -190,12 +190,12 @@ class yolo_depth_fuser : public rclcpp::Node
         }
 
         // find corresponding real depth (subtract the radius of the bucket to get the center)
-        float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity - BUCKET_RADIUS; // called relx for consistency with buckalization
+        float relx = FOCAL_LEN*CAMERAS_DIST/medianermaktuallydisparity + BUCKET_RADIUS; // called relx for consistency with buckalization
         
         // calculated through FANCY MATH with our specific camera VL-FPD3-8CAM-RPI22.
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
         // or geometry if you're boring like that; they yield the same end result
-        float rely = -relx*((1.0f/1300)*det.bbox.center.position.x - 48.0f/65);
+        float rely = -relx*((1.0f/FOCAL_LEN)*(det.bbox.center.position.x-320));
 
         // estimate object size in meters from 2D bbox pixel dimensions and distance
         float width_m = det.bbox.size_x * relx / FOCAL_LEN;

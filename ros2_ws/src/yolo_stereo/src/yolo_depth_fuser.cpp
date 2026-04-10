@@ -138,14 +138,13 @@ class yolo_depth_fuser : public rclcpp::Node
 
       RCLCPP_INFO(get_logger(), "Disparity image is %d by %d", (disparity_image.rows), (disparity_image.cols));
       vision_msgs::msg::Detection3DArray final_detections_arr;
-
+      cv::Mat color_map;
       if(view_overlay_){
         cv::Mat disp_normalized;
         disparity_image.convertTo(disp_normalized, CV_32F);
         disp_normalized = (disp_normalized - MIN_DISP) / MAX_DISP * 255;
         cv::Mat disp_uint8;
         disp_normalized.convertTo(disp_uint8, CV_8U);
-        cv::Mat color_map;
         cv::applyColorMap(disp_uint8, color_map, cv::COLORMAP_VIRIDIS);
       }
       
@@ -171,7 +170,9 @@ class yolo_depth_fuser : public rclcpp::Node
           continue;
         }
 
-        cv::rectangle(color_map, crop_rect, cv::Scalar(0, 255, 0), 2);
+        if(view_overlay_){
+          cv::rectangle(color_map, crop_rect, cv::Scalar(0, 255, 0), 2);
+        }
         cv::Mat cropped = disparity_image(crop_rect).clone();
         if (cropped.empty()) {
           RCLCPP_WARN(get_logger(), "Skipped empty cropped disparity region");

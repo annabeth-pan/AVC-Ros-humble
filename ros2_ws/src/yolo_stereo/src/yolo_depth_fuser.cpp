@@ -33,7 +33,7 @@
 // the crop is median'd to find an approximation for the closest point to the camera and from there the center
 #define BUCKET_RADIUS 0.16 // in m
 #define CAMERAS_DIST 0.256 // distance between cameras in m
-#define FOCAL_LEN 650 // focal length of cameras in pixels
+#define FOCAL_LEN 488 // focal length of cameras in pixels, calculated to be 1300, bean has a weird hypothesis about depth map resolution, acting weird at that number.
 
 #define NBINS 5 //Number of bins for histogram of data
 #define MIN_DISP 0

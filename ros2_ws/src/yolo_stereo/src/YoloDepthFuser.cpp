@@ -37,7 +37,7 @@
 #define CAMERAS_DIST 0.256 // distance between cameras in m
 #define FOCAL_LEN 1300 // focal length of cameras in pixels
 
-#define NBINS 10 //Number of bins for histogram of data
+#define NBINS 3 //Number of bins for histogram of data
 #define MIN_DISP 0
 #define MAX_DISP 255
 
@@ -95,6 +95,12 @@ class YoloDepthFuser : public rclcpp::Node
       bool uniform = true; bool accumulate = false;
       cv::Mat hist;
       calcHist(&Input, 1, 0, cv::Mat(), hist, 1, &nVals, &histRange, uniform, accumulate);
+
+      // Print the hist mat
+      for (int i = 0; i < hist.rows; ++i) {
+        RCLCPP_INFO(get_logger(), "Hist[%d]: %f", i, hist.at<float>(i));
+      }
+      
       // COMPUTE CUMULATIVE DISTRIBUTION FUNCTION (CDF)
       cv::Mat cdf;
       hist.copyTo(cdf);

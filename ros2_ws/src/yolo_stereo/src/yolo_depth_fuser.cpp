@@ -196,6 +196,7 @@ class yolo_depth_fuser : public rclcpp::Node
         // https://docs.opencv.org/2.4/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
         // or geometry if you're boring like that; they yield the same end result
         float rely = -relx*((1.0f/FOCAL_LEN)*(det.bbox.center.position.x-320));
+        float relz = -relx*((1.0f/FOCAL_LEN)*(det.bbox.center.position.y-320));
 
         // estimate object size in meters from 2D bbox pixel dimensions and distance
         float width_m = det.bbox.size_x * relx / FOCAL_LEN;
@@ -208,8 +209,8 @@ class yolo_depth_fuser : public rclcpp::Node
         detection3D.header = disp.header;
         detection3D.results[0].pose.pose.position.x = relx;
         detection3D.results[0].pose.pose.position.y = rely;
-        detection3D.bbox.center=detection3D.results[0].pose.pose;
-        detection3D.bbox.center.position.z=detection3D.results[0].pose.pose.position.z+height_m/2;
+        detection3D.bbox.center = detection3D.results[0].pose.pose;
+        detection3D.bbox.center.position.z = relz;
 
         
         // do all the other stuff you wanna put in a 3d detection array

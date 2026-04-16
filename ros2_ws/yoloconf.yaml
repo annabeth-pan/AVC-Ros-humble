@@ -1,7 +1,7 @@
 model_file_path: /home/nvidia/AVC-Ros-humble/ros2_ws/isaac_ros_assets/models/yolov8/badmodel.onnx
 engine_file_path: /home/nvidia/AVC-Ros-humble/ros2_ws/isaac_ros_assets/models/yolov8/badmodel_fp16.engine
 nms_threshold: 0.45
-confidence_threshold: 0.2
+confidence_threshold: 0.15
 input_image_width: 640
 input_image_height: 480
 network_image_width: 640
